@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
-// #include <chrono>
+#include <chrono>
 #include <string>
 #include <cstring>
 #include "ASGraph.h"
 
 int main(int argc, char *argv[])
 {
-    // auto start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
 
     std::string caida_file;
     std::string announcements_file;
@@ -43,22 +43,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // std::cout << "Building AS Graph" << std::endl;
+    std::cout << "Building AS Graph" << std::endl;
     ASGraph graph;
     graph.build_from_caida(caida_file);
-    // std::cout << "Graph built ( " << graph.graph.size() << " ASes)" << std::endl;
+    std::cout << "Graph built ( " << graph.graph.size() << " ASes)" << std::endl;
 
-    // std::cout << "Flattening graph" << std::endl;
+    std::cout << "Flattening graph" << std::endl;
     graph.flatten_graph();
 
     graph.load_rov_asns(rov_asns_file);
 
     graph.seed_announcements(announcements_file);
 
-    // std::cout << "Propagating announcements (wait)" << std::endl;
+    std::cout << "Propagating announcements (wait)" << std::endl;
     graph.propagate();
 
-    // std::cout << "Exporting to " << output_file << std::endl;
+    std::cout << "Exporting to " << output_file << std::endl;
 
     std::vector<uint32_t> check_asns = {1, 2, 3, 4, 25, 27};
     for (uint32_t asn : check_asns)
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         if (graph.graph.find(asn) != graph.graph.end())
         {
             int count = graph.graph[asn]->policy->local_rib.size();
-            // std::cout << "ASN " << asn << " has " << count << " announcements" << std::endl;
+            std::cout << "ASN " << asn << " has " << count << " announcements" << std::endl;
         }
         else
         {
@@ -76,9 +76,9 @@ int main(int argc, char *argv[])
 
     graph.export_to_csv(output_file);
 
-    // std::cout << "Done! Output written to " << output_file << std::endl;
-    // auto end_time = std::chrono::high_resolution_clock::now();
-    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    // std::cout << "Time taken: " << duration.count() << "ms" << std::endl;
+    std::cout << "Done! Output written to " << output_file << std::endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Time taken: " << duration.count() << "ms" << std::endl;
     return 0;
 }
